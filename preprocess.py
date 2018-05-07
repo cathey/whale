@@ -8,15 +8,14 @@ Created on Sun May  6 11:04:01 2018
 """
 
 import tensorflow as tf
-import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-import matplotlib.gridspec as gridspec
 import numpy as np
 import os
+import math
+import pickle
 
-from PIL import Image
-from math import floor, ceil, pi
+from skimage.transform import resize
 
 
 def global_variables():
@@ -28,13 +27,17 @@ def global_variables():
 def get_images(path):
     files = os.listdir(path)
     imgs = np.zeros((0,h,w))
+    #num = 1
     for file in files:
+        #print(num)
         filename = os.path.join(path, file)
         im = mpimg.imread(filename)
         if len(im.shape) == 3:
             im = np.mean(im, axis = -1)
-        im = np.resize(im, (1, h, w))
+        im = resize(im, (h, w))         # rescale
+        im = np.resize(im, (1, h, w))   # add dimension
         imgs = np.concatenate((imgs, im), axis = 0)
+        #num = num + 1
     return imgs
 
 
@@ -43,3 +46,7 @@ if __name__ == "__main__":
     
     train_path = "../data/train/"
     train_imgs = get_images(train_path)
+    
+    f = open('train_imgs.pckl', 'wb')
+    pickle.dump(train_imgs, f)
+    f.close()
