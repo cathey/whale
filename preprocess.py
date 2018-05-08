@@ -26,18 +26,19 @@ def global_variables():
 
 def get_images(path):
     files = os.listdir(path)
-    imgs = np.zeros((0,h,w))
-    #num = 1
+    imgs = np.zeros((9850,h,w))
+    num = 0
     for file in files:
-        #print(num)
+        print(num)
         filename = os.path.join(path, file)
         im = mpimg.imread(filename)
         if len(im.shape) == 3:
             im = np.mean(im, axis = -1)
         im = resize(im, (h, w))         # rescale
-        im = np.resize(im, (1, h, w))   # add dimension
-        imgs = np.concatenate((imgs, im), axis = 0)
-        #num = num + 1
+        #im = np.resize(im, (1, h, w))   # add dimension
+        #imgs = np.concatenate((imgs, im), axis = 0)
+        imgs[num, :,:] = im
+        num = num + 1
     return imgs
 
 
